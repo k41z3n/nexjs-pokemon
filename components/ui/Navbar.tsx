@@ -21,27 +21,26 @@ export const Navbar = () => {
 
             <Link href="/">
                 <Image
-                    src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/150.png'
+                    src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png'
                     alt="icon"
                     width={70}
                     height={70}
                 />
             </Link>
 
-            <Text color="white" h2 >
-                <Link href="/" color="text">P</Link>
-            </Text>
-            <Text color="white" h3 >
-                <Link href="/" color="text">
-                    okemon
+            <NextLink href="/" >
+                <Link>
+                    <Text color="white" h2 >P</Text>
+                    <Text color="white" h3 >okemon</Text>
                 </Link>
-            </Text>
+            </NextLink>
+
             <Spacer css={{ flex: "1" }} />
-            <Text color="white" span >
-                <Link href="/favorites" color="text">
+            <Link href="/favorites" color="text">
+                <Text color="white" span >
                     Favoritos
-                </Link>
-            </Text>
+                </Text>
+            </Link>
         </div>
     )
 }

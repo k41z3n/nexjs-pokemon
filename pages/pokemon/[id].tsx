@@ -1,21 +1,27 @@
 import { Button, Card, Container, Grid, Text } from '@nextui-org/react';
-import { NextPage, GetStaticProps, GetStaticPaths } from "next"
-import { useRouter } from "next/router"
-import { pokeApi } from "../../api"
-import { Layout } from "../../components/layouts"
-import { Pokemon } from "../../interfaces"
+import { NextPage, GetStaticProps, GetStaticPaths } from 'next';
+
+import { pokeApi } from '../../api';
+import { Layout } from '../../components/layouts';
+import { Pokemon } from '../../interfaces';
 import Image from 'next/image';
-
-
+import { localStorageFavorites } from '../../utils/';
+import { useState } from 'react';
 
 interface Props {
-    pokemon: Pokemon
+    pokemon: Pokemon;
 }
 
-
 const PokemonPage: NextPage<Props> = ({ pokemon }) => {
+    const [isInFavorites, setIsInFavorites] = useState(
+        localStorageFavorites.existInFavorites(pokemon.id)
+    );
 
-    const router = useRouter()
+    const onToggleFavorites = () => {
+        localStorageFavorites.toggleFavorites(pokemon.id);
+        setIsInFavorites(!isInFavorites)
+    };
+
 
     return (
         <Layout title={pokemon.name}>
@@ -24,7 +30,10 @@ const PokemonPage: NextPage<Props> = ({ pokemon }) => {
                     <Card isHoverable>
                         <Card.Body>
                             <Card.Image
-                                src={pokemon.sprites.other?.dream_world.front_default || '/no-image.png'}
+                                src={
+                                    pokemon.sprites.other?.dream_world.front_default ||
+                                    '/no-image.png'
+                                }
                                 alt={pokemon.name}
                                 width="100%"
                                 height={200}
@@ -35,15 +44,22 @@ const PokemonPage: NextPage<Props> = ({ pokemon }) => {
                 <Grid xs={12} sm={8}>
                     <Card>
                         <Card.Header
-                            css={{ display: "flex", justifyContent: "space-between" }}>
-                            <Text h1 transform='capitalize'>{pokemon.name}</Text>
-                            <Button color="gradient" ghost>
-                                Guardar en favoritos
+                            css={{ display: 'flex', justifyContent: 'space-between' }}
+                        >
+                            <Text h1 transform="capitalize">
+                                {pokemon.name}
+                            </Text>
+                            <Button
+                                color="gradient"
+                                ghost={!isInFavorites}
+                                onPress={onToggleFavorites}
+                            >
+                                {isInFavorites ? "En Favoritos" : "Guardar en favoritos"}
                             </Button>
                         </Card.Header>
                         <Card.Body>
                             <Text size={30}>Sprites</Text>
-                            <Container direction='row' display='flex' gap={0}>
+                            <Container direction="row" display="flex" gap={0}>
                                 <Image
                                     src={pokemon.sprites.front_default}
                                     alt={pokemon.name}
@@ -63,36 +79,32 @@ const PokemonPage: NextPage<Props> = ({ pokemon }) => {
                                     height={100}
                                 />
                             </Container>
-
                         </Card.Body>
                     </Card>
-
                 </Grid>
             </Grid.Container>
         </Layout>
-    )
-}
-
-
+    );
+};
 
 // You should use getStaticPaths if you’re statically pre-rendering pages that use dynamic routesimport { GetStaticPaths } from 'next'
 
 export const getStaticPaths: GetStaticPaths = async (ctx) => {
-    // const { data } = await  // your fetch function here 
+    // const { data } = await  // your fetch function here
 
-    const pokemons151 = [...Array(151)].map((val, index) => `${index + 1}`)
+    const pokemons151 = [...Array(151)].map((val, index) => `${index + 1}`);
     return {
         // paths: [
         //     {
         //         params: { id: '1' }
         //     }
         // ],
-        paths: pokemons151.map(id => ({
-            params: { id }
+        paths: pokemons151.map((id) => ({
+            params: { id },
         })),
-        fallback: false // 404
-    }
-}
+        fallback: false, // 404
+    };
+};
 
 // You should use getStaticProps when:
 //- The data required to render the page is available at build time ahead of a user’s request.
@@ -101,17 +113,16 @@ export const getStaticPaths: GetStaticPaths = async (ctx) => {
 //- The page must be pre-rendered (for SEO) and be very fast — getStaticProps generates HTML and JSON files, both of which can be cached by a CDN for performance.
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-    // const { data } = await  // your fetch function here 
-    const { id } = params as { id: string }
+    // const { data } = await  // your fetch function here
+    const { id } = params as { id: string };
 
-    const { data } = await pokeApi.get<Pokemon>(`/pokemon/${id}`)
+    const { data } = await pokeApi.get<Pokemon>(`/pokemon/${id}`);
 
     return {
         props: {
-            pokemon: data
-        }
-    }
-}
+            pokemon: data,
+        },
+    };
+};
 
-
-export default PokemonPage
+export default PokemonPage;

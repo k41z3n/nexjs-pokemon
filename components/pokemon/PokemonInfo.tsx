@@ -40,6 +40,7 @@ export const PokemonInfo: FC<Props> = ({ pokemon }) => {
 
     return (
         <>
+            {/* <pre>{JSON.stringify(pokemon, null, 4)}</pre> */}
             <Grid.Container gap={4}>
                 <Grid xs={12} sm={4}>
                     <Card isHoverable>

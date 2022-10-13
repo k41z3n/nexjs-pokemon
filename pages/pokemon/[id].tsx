@@ -3,6 +3,7 @@ import { pokeApi } from '../../api';
 import { Layout } from '../../components/layouts';
 import { Pokemon } from '../../interfaces';
 import { PokemonInfo } from '../../components/pokemon/';
+import { GetPokemonInfo } from '../../utils';
 
 interface Props {
     pokemon: Pokemon;
@@ -46,11 +47,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     // const { data } = await  // your fetch function here
     const { id } = params as { id: string };
 
-    const { data } = await pokeApi.get<Pokemon>(`/pokemon/${id}`);
-
     return {
         props: {
-            pokemon: data,
+            pokemon: await GetPokemonInfo(id),
         },
     };
 };

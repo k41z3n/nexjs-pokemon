@@ -1,88 +1,18 @@
-import { Button, Card, Container, Grid, Text } from '@nextui-org/react';
 import { NextPage, GetStaticProps, GetStaticPaths } from 'next';
-
 import { pokeApi } from '../../api';
 import { Layout } from '../../components/layouts';
 import { Pokemon } from '../../interfaces';
-import Image from 'next/image';
-import { localStorageFavorites } from '../../utils/';
-import { useState } from 'react';
+import { PokemonInfo } from '../../components/pokemon/';
 
 interface Props {
     pokemon: Pokemon;
 }
 
 const PokemonPage: NextPage<Props> = ({ pokemon }) => {
-    const [isInFavorites, setIsInFavorites] = useState(
-        localStorageFavorites.existInFavorites(pokemon.id)
-    );
-
-    const onToggleFavorites = () => {
-        localStorageFavorites.toggleFavorites(pokemon.id);
-        setIsInFavorites(!isInFavorites)
-    };
-
 
     return (
         <Layout title={pokemon.name}>
-            <Grid.Container gap={4}>
-                <Grid xs={12} sm={4}>
-                    <Card isHoverable>
-                        <Card.Body>
-                            <Card.Image
-                                src={
-                                    pokemon.sprites.other?.dream_world.front_default ||
-                                    '/no-image.png'
-                                }
-                                alt={pokemon.name}
-                                width="100%"
-                                height={200}
-                            />
-                        </Card.Body>
-                    </Card>
-                </Grid>
-                <Grid xs={12} sm={8}>
-                    <Card>
-                        <Card.Header
-                            css={{ display: 'flex', justifyContent: 'space-between' }}
-                        >
-                            <Text h1 transform="capitalize">
-                                {pokemon.name}
-                            </Text>
-                            <Button
-                                color="gradient"
-                                ghost={!isInFavorites}
-                                onPress={onToggleFavorites}
-                            >
-                                {isInFavorites ? "En Favoritos" : "Guardar en favoritos"}
-                            </Button>
-                        </Card.Header>
-                        <Card.Body>
-                            <Text size={30}>Sprites</Text>
-                            <Container direction="row" display="flex" gap={0}>
-                                <Image
-                                    src={pokemon.sprites.front_default}
-                                    alt={pokemon.name}
-                                    width={100}
-                                    height={100}
-                                />
-                                <Image
-                                    src={pokemon.sprites.back_default}
-                                    alt={pokemon.name}
-                                    width={100}
-                                    height={100}
-                                />
-                                <Image
-                                    src={pokemon.sprites.front_shiny}
-                                    alt={pokemon.name}
-                                    width={100}
-                                    height={100}
-                                />
-                            </Container>
-                        </Card.Body>
-                    </Card>
-                </Grid>
-            </Grid.Container>
+            <PokemonInfo pokemon={pokemon} />
         </Layout>
     );
 };
